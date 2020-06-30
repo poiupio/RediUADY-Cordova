@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--
+        Customize this policy to fit your own app's needs. For more guidance, see:
+            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+        Some notes:
+            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+        <meta charset="utf-8">
+        <!--<meta http-equiv="Content-Security-Policy"-->
+        <!--content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:; connect-src 'self' https://demo.dspace.org">-->
+
+        <meta name="Content-Security-Policy" content="default-src 'self' https://redi.uady.mx data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+
+        <!-- <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'"> -->
+
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+
+        <link rel="stylesheet" type="text/css" href="vendor/flatui/jquery.mobile-1.4.5-flatui.css">
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+
+        <title>Repositorio Institucional UADY</title>
+    </head>
+    <body>
+
+        <div data-role="page" id="pagBuscar">
+            <div data-role="content">
+                <div>
+                    <form id="formBuscar">
+                        <label>Buscar en el repositorio:</label>
+                        <input data-mini="true" name="buscar" type="search" id="txtBuscar">
+                        <div>
+                            <ul id='autoComplete'></ul>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="divContenido">
+                    <div>
+                        <img src="img/sede_uady.jpg" class="edificio">
+                    </div>
+
+                    <p class="etiqueta"><b>¡Bienvenido al Repositorio Institucional!</b></p>
+
+                    <p>
+                        Esta es la aplicación móvil del respositorio institucional de la <b>Universidad Autónoma de Yucatán </b>.
+                        Aquí podrás consultar las tésis, libros o publicaciones de cada una de las facultades.
+                    </p>
+                    <p class="etiqueta"><b>Busca en las comunidades</b></p>
+                    <p>
+                        Cada escuela de la universidad tiene su propia comunidad y sus propios archivos,
+                        éstas son las disponibles:
+                    </p>
+                    <ul id="listaComunidades">
+                    </ul>
+                    <p class="etiqueta"><b>Utiliza el buscador</b></p>
+                    <p>
+                        Si no sabes por dónde empezar, en la parte de arriba está una caja de texto
+                        en la que puedes buscar algún documento por el título o los metadatos. Prueba la palabra "yucatán".
+                    </p>
+                </div>
+
+                <div id="divLista">
+                    <p style="display: none;" id="msgInfoBusqueda"></p>
+                    <ul id="tablaBusqueda"
+                        data-role="listview"
+                        data-inset="true"
+                        data-divider-theme="a"
+                        data-theme="c">
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div data-role="page" id="pagComunidades">
+            <div data-role="content">
+                <ul id="tablaComunidades"
+                    data-role="listview"
+                    data-inset="true"
+                    data-divider-theme="a"
+                    data-theme="c">
+                </ul>
+            </div>
+        </div>
+
+        <div data-role="page" id="pagColecciones">
+            <div data-role="content">
+                <h3 id="nombreComunidad"><b>Comunidad</b></h3>
+                <h3 style="display: none;" id="msgNoHayColecciones">Parece que aún no existen colecciones en esta comunidad</h3>
+                <ul id="tablaColecciones"
+                    data-role="listview"
+                    data-inset="true"
+                    data-divider-theme="a"
+                    data-theme="c">
+                </ul>
+            </div>
+        </div>
+
+        <div data-role="page" id="pagItems">
+
+            <div data-role="content">
+                <h3 id="nombreColeccion"><b>Colección</b></h3>
+                <h3 style="display: none;" id="msgNoHayItemsColeccion">Parece que aún no existen documentos en esta colección</h3>
+                <ul id="tablaColecItems"
+                    data-role="listview"
+                    data-inset="true"
+                    data-divider-theme="a"
+                    data-theme="c">
+                </ul>
+            </div>
+
+        </div>
+
+        <div data-role="page" id="pagDetalleItem">
+
+            <div data-role="content">
+
+                <p class="etiqueta"><b>Título:</b><p>
+                <p id="nombreItem">Sin título</p>
+
+                <p class="etiqueta"><b>Resumen:</b><p>
+                <p id="resumen">Sin resumen</p>
+
+                <p class="etiqueta"><b>Palabras clave:</b><p>
+                <ul id="keywords"
+                    data-theme="c"
+                    data-role="listview"
+                    data-inset="true">
+                </ul>
+
+                <p class="etiqueta"><b>Autor:</b><p>
+                <p id="creador">Sin autor</p>
+
+                <p class="etiqueta"><b>Fecha de publicación:</b><p>
+                <p id="fechaPub">Sin fecha de publicación</p>
+
+                <p class="etiqueta" style="white-space: pre-wrap;"><b>Identificador:</b><p>
+                <a id="issn" target="_blank">Sin identificador</a>
+
+                <button id="btnRecursoItem"
+                        class="ui-btn ui-btn-b ui-corner-all ui-btn-icon-left ui-icon-bars" >
+                        Ver recursos
+                </button>
+
+                <ul id="listaRecursosItem"
+                    style="display: none;"
+                    data-theme="c"
+                    data-role="listview"
+                    data-inset="true">
+
+                </ul>
+
+            </div>
+
+        </div>
+
+        <div data-role="page" id="pagConfiguracion">
+
+            <div data-role="content">
+                <p class="etiqueta"><b>Configuraciones</b></p>
+
+                 <!-- <p>
+                    Con fines estadísticos para la universidad puedes indicarnos de que facultad
+                    consultas el repositorio. La información es completamente confidencial.
+                    Tu facultad actual es: <b id="facultadAcutal">Sin facultad</b>
+                </p>
+
+                <a href="#popupFacultad"
+                    data-rel="popup"
+                    class="ui-btn ui-corner-all ui-corner-all ui-icon-bars ui-btn-icon-left"
+                    data-transition="pop">
+                        Elige una facultad
+                </a>
+
+                <div data-role="popup" id="popupFacultad" data-trasition="pop" data-theme="f">
+                    <ul data-role="listview" data-inset="true">
+                    </ul>
+                </div>  -->
+
+
+                <p>
+                    Para un ahorro de datos móviles la aplicación guarda algunos datos en el caché,
+                    si quieres eliminarlos pulsa en el botón de abajo.
+                </p>
+
+                <button id="btnBorrarCache" class="ui-btn ui-btn-b ui-corner-all ui-btn-icon-left ui-icon-minus">
+                    Borrar chaché
+                </button>
+
+                <!-- <button class="ui-btn ui-corner-all ui-btn-icon-left ui-icon-bars">Ver recursos</button>
+                <button class="ui-btn ui-btn-a ui-corner-all ui-btn-icon-left ui-icon-bars">Ver recursos</button>
+                <button class="ui-btn ui-btn-b ui-corner-all ui-btn-icon-left ui-icon-bars">Ver recursos</button>
+                <button class="ui-btn ui-btn-c ui-corner-all ui-btn-icon-left ui-icon-bars">Ver recursos</button>
+                <button class="ui-btn ui-btn-d ui-corner-all ui-btn-icon-left ui-icon-bars">Ver recursos</button>
+                <button class="ui-btn ui-btn-e ui-corner-all ui-btn-icon-left ui-icon-bars">Ver recursos</button>
+                <button class="ui-btn ui-btn-f ui-corner-all ui-btn-icon-left ui-icon-bars">Ver recursos</button>
+                <button class="ui-btn ui-btn-g ui-corner-all ui-btn-icon-left ui-icon-bars">Ver recursos</button>
+                -->
+            </div>
+
+        </div>
+
+        <div data-role="page">
+
+        </div>
+
+        <div data-role="page">
+            <div data-role="popup" id="popupMensaje" data-theme="a" data-transition="pop">
+                <div data-role="header" class="ui-header">
+                    <h3 style="text-align: center;">Aviso</h3>
+                </div>
+                <div data-role="content" class="ui-content">
+                    <h4 id="dlgMensajeTexto"></h4>
+                    <button id="btnOkMensaje"
+                            class="ui-btn ui-corner-all"
+                            onclick="$.mobile.back()"
+                            data-theme="c">Entendido</button>
+                </div>
+            </div>
+        </div>
+
+        <div data-role="header" data-position="fixed" data-tap-toggle="false">
+            <a href="#" data-role="button" data-inline="true" data-rel="back" data-icon="carat-l">atrás</a>
+            <h4>Repositorio UADY</h4>
+        </div>
+
+        <div data-role="footer" data-position="fixed" data-tap-toggle="false">
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="#pagBuscar" data-icon="search">Buscador</a></li>
+                    <li><a href="#pagComunidades" data-icon="bullets">Comunidades</a></li>
+                    <li><a href="#pagConfiguracion" data-icon="gear">Configuración</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="vendor/jquery.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript" src="js/informacion.js"></script>
+        <script type="text/javascript" src="js/busqueda.js"></script>
+        <script type="text/javascript" src="js/comunidades.js"></script>
+        <script type="text/javascript" src="js/colecciones.js"></script>
+        <script type="text/javascript" src="vendor/jqm/jquery.mobile-1.4.5.min.js"></script>
+    </body>
+</html>
